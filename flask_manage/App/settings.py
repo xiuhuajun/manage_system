@@ -20,6 +20,7 @@ class Config:
     DEBUG = False
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = "jsd2312klsdf2133njfs3dsf"
 
 
 class DevelopConfig(Config):
