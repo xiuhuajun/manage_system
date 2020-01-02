@@ -125,3 +125,4 @@ class Check(BaseModel):
         default="WAIT_CHECK",
         index=True)  #审核结果
     desc = db.Column(db.Text, default="")  # 审核描述
+    commit = db.Column(db.Boolean, default=False) # 是否提交
