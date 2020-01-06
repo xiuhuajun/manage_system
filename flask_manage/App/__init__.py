@@ -1,7 +1,10 @@
+import os
+
 from flask import Flask
 from App.apps import init_view
 from App.ext import init_ext
 from App.settings import envs
+from flask_session import  Session
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -30,9 +33,12 @@ def create_app(env):
     # 日志
     app.logger.addHandler(file_log_handler)
 
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False #不拦截重定向
+
     # 初始化第三方扩展库
     init_ext(app)
     # 初始化路由
     init_view(app=app)
 
+    # Session(app)
     return app

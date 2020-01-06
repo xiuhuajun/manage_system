@@ -1,1 +1,3 @@
 2020-01-01 21:04:35,404 - App - INFO - first_blue.py - 10 - access success
+2020-01-02 10:18:26,993 - flask.app - INFO - first_blue.py - 10 - access success
+2020-01-02 10:22:52,235 - flask.app - INFO - first_blue.py - 14 - access success

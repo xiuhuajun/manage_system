@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8327e8191319
+Revision ID: 948b3f1838ee
 Revises: 
-Create Date: 2020-01-01 21:12:32.827211
+Create Date: 2020-01-03 10:47:13.375014
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8327e8191319'
+revision = '948b3f1838ee'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -40,7 +40,6 @@ def upgrade():
     sa.Column('create_time', sa.DateTime(), nullable=True),
     sa.Column('update_time', sa.DateTime(), nullable=True),
     sa.Column('name', sa.String(length=32), nullable=False),
-    sa.Column('password', sa.String(length=128), nullable=False),
     sa.Column('phone', sa.String(length=11), nullable=False),
     sa.Column('is_delete', sa.Boolean(), nullable=True),
     sa.Column('is_activate', sa.Boolean(), nullable=True),
@@ -63,6 +62,7 @@ def upgrade():
     sa.Column('actual_end_time', sa.DateTime(), nullable=True),
     sa.Column('general_budget', sa.Float(), nullable=True),
     sa.Column('status', sa.Enum('WAIT_CHECK', 'PASS', 'REJECTED', 'CANCELED'), nullable=True),
+    sa.Column('phone', sa.String(length=11), nullable=False),
     sa.Column('commit', sa.Boolean(), nullable=True),
     sa.Column('desc', sa.Text(), nullable=True),
     sa.Column('review', sa.Boolean(), nullable=True),
@@ -80,6 +80,7 @@ def upgrade():
     sa.Column('check_person', sa.Integer(), nullable=False),
     sa.Column('result', sa.Enum('WAIT_CHECK', 'PASS', 'REJECTED', 'CANCELED'), nullable=True),
     sa.Column('desc', sa.Text(), nullable=True),
+    sa.Column('commit', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['check_person'], ['tbl_user.id'], ),
     sa.ForeignKeyConstraint(['itemplans'], ['tbl_itemplan.id'], ),
     sa.PrimaryKeyConstraint('id')

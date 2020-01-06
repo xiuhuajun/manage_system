@@ -1,0 +1,243 @@
+{#{% load staticfiles %}#}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>INSPINIA | Register</title>
+
+{#    <link href="css/bootstrap.min.css" rel="stylesheet">#}
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/animate.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen   animated fadeInDown">
+        <div>
+            <div>
+
+                <h1 class="logo-name">IN+</h1>
+
+            </div>
+            <h3>Register to IN+</h3>
+            <p>Create account to see it in action.</p>
+{#            <form class="m-t" role="form" action="register.html">#}
+            <form method="post" class="m-t" role="form" action="/register/" id="submit">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="form-group" >
+                    <input type="text" class="form-control" placeholder="Name" required="" id="user_name" name="user_name">
+{#                    {{ form.name }}#}
+                    <span class="error_tip" id="unameSpan"></span>
+                </div>
+
+                <div class="form-group">
+{#                    <input type="email" class="form-control" placeholder="Email" required="">#}
+                    <input type="text" class="form-control" placeholder="phone" required="" id="phone" name="phone">
+{#                    {{ form.phone }}#}
+                    <span class="error_tip" id="phoneSpan"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Password" required="" id="pwd" name="pwd">
+{#                    {{ form.pwd }}#}
+                    <span class="error_tip" id="pwdSpan"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="确认密码" required="" id="cpwd" name="cpwd">
+{#                    {{ form.cpwd }}#}
+                    <span class="error_tip" id="cpwdSpan"></span>
+                </div>
+
+                <div class="form-group">
+                        <div class="checkbox i-checks" ><label > <input type="checkbox"  required="" id="allow"  name="allow"/><i></i> Agree the terms and policy </label></div>
+                        <span class="error_tip" id="allowSpan"></span>
+                </div>
+
+                <input type="submit" class="btn btn-primary block full-width m-b">Register</input>
+
+{#                {{ form.csrf_token }}#}
+{#                {{ form.submit }}#}
+
+                <p class="text-muted text-center"><small>Already have an account?</small></p>
+                <a class="btn btn-sm btn-white btn-block" href="login.html">Login</a>
+            </form>
+
+            <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small> </p>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+{#    <script src="js/jquery-2.1.1.js"></script>#}
+    <script src="{{ url_for('static',filename='js/jquery-2.1.1.js') }}"></script>
+{#    <script src="js/bootstrap.min.js"></script>#}
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    <!-- iCheck -->
+{#    <script src="js/plugins/iCheck/icheck.min.js"></script>#}
+    <script src="{{ url_for('static',filename='js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script>
+        var user_err = false
+        var phone_err=false
+        var pwd_err = false
+        var cpwd_err = false
+        var allow_err = false
+        {#document.getElementById('user_name').onblur = function(){#}
+        {#         alert('div blur');#}
+        {#     };#}
+
+
+        $(document).ready(function() {
+             /**
+           $('.i-checks').iCheck({
+               checkboxClass: 'icheckbox_square-green',
+               radioClass: 'iradio_square-green',
+           });
+            */
+            $('#user_name').blur(
+                {#check_uname(  ) 此函数就会在页面加载后立即执行#}
+                check_uname
+            )
+
+            $('#phone').blur(
+                {#check_uname(  ) 此函数就会在页面加载后立即执行#}
+                check_phone
+            )
+
+            $('#pwd').blur(
+                {#check_uname(  ) 此函数就会在页面加载后立即执行#}
+                check_pwd
+            )
+
+            $('#cpwd').blur(
+                check_cpwd
+            )
+
+
+            $('#allow').click(check_allow)
+
+            function check_uname() {
+                username = $('#user_name').val()
+                {#$('#unameSpan').css('display','block')#}
+                {#$('#unameSpan').text('hello')#}
+
+
+                {# gi:全局匹配+忽略大小写#}
+                res = /^\w{3,8}$/gi;
+
+                if (username.length == 0) {
+                    $('#unameSpan').text('用户名不能为空')
+                    $('#unameSpan').css('color', 'red')
+                    user_err = true
+                } else if (res.test(username)) {
+                    $.get('/user/code_user/', {'username': username}, function (data) {
+                        flag = data.flag
+                        if (flag) {
+                            $('#unameSpan').text('用户名已存在')
+                            $('#unameSpan').css('color', 'red')
+                            user_err = true
+                        } else {
+                            $('#unameSpan').text('此用户名可以注册')
+                            $('#unameSpan').css('color', 'green')
+                            user_err = false
+                        }
+                    })
+                } else {
+                    $('#unameSpan').text('用户名格式错误')
+                    $('#unameSpan').css('color', 'red')
+                    user_err = true
+                }
+
+            }
+
+            function check_phone() {
+                phone = $('#phone').val()
+
+                {# gi:全局匹配+忽略大小写#}
+                res = /^1(\w){10}$/gi;
+
+                if (phone.length == 0) {
+                    $('#phoneSpan').text('phone不能为空')
+                    $('#phoneSpan').css('color', 'red')
+                    phone_err = true
+                } else if (res.test(phone)) {
+                    $.get('/user/code_phone/', {'phone': phone}, function (data) {
+                        flag = data.flag
+                        if (flag) {
+                            $('#phoneSpan').text('phone已存在')
+                            $('#phoneSpan').css('color', 'red')
+                            phone_err = true
+                        } else {
+                            $('#phoneSpan').text('此phone可以注册')
+                            $('#phoneSpan').css('color', 'green')
+                            phone_err = false
+                        }
+                    })
+                } else {
+                    $('#phoneSpan').text('phone格式错误')
+                    $('#phoneSpan').css('color', 'red')
+                    phone_err = true
+                }
+            }
+
+
+            function check_pwd() {
+                pwd = $('#pwd').val()
+
+                {# gi:全局匹配+忽略大小写#}
+                {#res = /^1(\w){10}$/gi;#}
+                if (pwd.length == 0) {
+                    $('#pwdSpan').text('密码不能为空')
+                    $('#pwdSpan').css('color', 'red')
+                    pwd_err = true
+                }
+            }
+
+            function check_cpwd() {
+                cpwd = $('#cpwd').val()
+                pwd = $('#pwd').val()
+
+                {# gi:全局匹配+忽略大小写#}
+                {#res = /^1(\w){10}$/gi;#}
+                if (cpwd.length == 0) {
+                    $('#cpwdSpan').text('验证密码不能为空')
+                    $('#cpwdSpan').css('color', 'red')
+                    cpwd_err = true
+                } else if (pwd != cpwd) {
+                    $('#cpwdSpan').text('两次密码不一致')
+                    $('#cpwdSpan').css('color', 'red')
+                    cpwd_err = true
+                } else {
+                    $('#cpwdSpan').text('OK~')
+                    $('#cpwdSpan').css('color', 'green')
+                    cpwd_err = false
+                }
+            }
+
+            // allow 验证
+            function check_allow(){
+                allow = $('#allow').is(':checked')
+                if (allow) {
+                    $('#allowSpan').html('')
+                    allow_err = false
+                } else {
+                    $('#allowSpan').html('请勾选')
+                    $('#allowSpan').css('color', 'red')
+                    $('#allowSpan').css('display', 'block')
+                    allow_err = true
+                }
+            }
+
+
+
+        })
+    </script>
+</body>
+
+</html>

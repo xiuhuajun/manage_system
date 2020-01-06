@@ -1,7 +1,10 @@
 import os
+import redis
 
 BASE_DIR = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
 
 
 def get_db_uri(dbinfo):
@@ -20,7 +23,14 @@ class Config:
     DEBUG = False
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     SECRET_KEY = "jsd2312klsdf2133njfs3dsf"
+
+    # SESSION_TYPE = "redis"
+    # SESSION_COOKIE_SECURE = True
+    # SESSION_USE_SIGNER = True
+    # SESSION_PERMANENT = True
+    # SESSION_REDIS = redis.Redis(host='127.0.0.1', port='6379', db=2) #password='123123'
 
 
 class DevelopConfig(Config):
@@ -84,3 +94,4 @@ envs = {
     "product": ProductConfig,
     "default": DevelopConfig
 }
+

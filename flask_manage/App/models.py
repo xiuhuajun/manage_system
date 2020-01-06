@@ -35,7 +35,7 @@ class User(BaseModel):
     """用户模型"""
     __tablename__ = "tbl_user"
     name = db.Column(db.String(32), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     phone = db.Column(db.String(11), unique=True, nullable=False)
     is_delete = db.Column(db.Boolean, default=False)
     is_activate = db.Column(db.Boolean, default=False)
@@ -44,6 +44,17 @@ class User(BaseModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def password(self):
+        raise AttributeError("Error Action: Password can't be access")
+
+    @password.setter
+    def password(self, value):
+        self.password_hash = generate_password_hash(value)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 class ItemType(BaseModel):
@@ -62,7 +73,7 @@ class Province(BaseModel):
     """省份"""
     __tablename__ = "tbl_province"
     name = db.Column(db.String(20), nullable=False)
-    itemplans = db.relationship("ItemPlan", backref="province")  # 省份下的所有项目
+    # itemplans = db.relationship("ItemPlan", backref="province")  # 省份下的所有项目
 
     def __str__(self):
         return self.name
@@ -96,6 +107,7 @@ class ItemPlan(BaseModel):
             "CANCELED"  # 审核已取消
         ),
         default="WAIT_CHECK",
+        # index	如果设为 True，为这列创建索引，提升查询效率
         index=True)  # 审批状态
     commit = db.Column(db.Boolean, default=False)  # 是否提交
     desc = db.Column(db.Text, default="")  # 工作描述

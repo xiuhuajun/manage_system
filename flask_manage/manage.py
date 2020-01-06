@@ -11,7 +11,8 @@ manager = Manager(app=app)
 manager.add_command('db', MigrateCommand)
 
 if __name__ == "__main__":
-    manager.run()
+    # manager.run()
+    app.run()
 
 # python manage.py db init     创建迁移文件
 # python manage.py db migrate  创建数据库中版本信息
